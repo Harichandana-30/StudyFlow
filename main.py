@@ -23,6 +23,36 @@ left_frame.pack(side="left", fill="both", padx=20, pady=20)
 right_frame = ctk.CTkFrame(main_frame)
 right_frame.pack(side="right", fill="both", expand=True, padx=20, pady=20)
 
+dashboard_frame = ctk.CTkFrame(
+    right_frame,
+    corner_radius=15
+)
+dashboard_frame.pack(
+    pady=10,
+    fill="x"
+)
+
+total_label = ctk.CTkLabel(
+    dashboard_frame,
+    text="Total: 0",
+    font=("Arial", 18, "bold")
+)
+total_label.pack(side="left", padx=20, pady=10)
+
+completed_label = ctk.CTkLabel(
+    dashboard_frame,
+    text="Completed: 0",
+    font=("Arial", 18, "bold")
+)
+completed_label.pack(side="left", padx=20)
+
+pending_label = ctk.CTkLabel(
+    dashboard_frame,
+    text="Pending: 0",
+    font=("Arial", 18, "bold")
+)
+pending_label.pack(side="left", padx=20)
+
 app.title("StudyFlow")
 app.geometry("1000x700")
 
@@ -114,6 +144,8 @@ def display_tasks():
     task_list.tag_config("pending", foreground="red")
 
     update_progress()
+    update_dashboard()
+
 def update_progress():
 
     tasks = get_tasks()
@@ -135,6 +167,32 @@ def update_progress():
 
     progress_label.configure(
         text=f"Progress: {int(progress * 100)}% Completed"
+    )
+
+def update_dashboard():
+
+    tasks = get_tasks()
+
+    total = len(tasks)
+
+    completed = 0
+
+    for task in tasks:
+        if task[4] == "Completed":
+            completed += 1
+
+    pending = total - completed
+
+    total_label.configure(
+        text=f"Total: {total}"
+    )
+
+    completed_label.configure(
+        text=f"Completed: {completed}"
+    )
+
+    pending_label.configure(
+        text=f"Pending: {pending}"
     )
 
 # Heading
@@ -265,14 +323,15 @@ task_label = ctk.CTkLabel(
     text="Your Study Tasks",
     font=("Arial", 24, "bold")
 )
-task_label.pack(pady=10)
+task_label.pack(pady=(20, 10))
 
 task_list = ctk.CTkTextbox(
     right_frame,
     width=500,
     height=550
 )
-task_list.pack(pady=20)
+task_list.pack(pady=20, padx=20, fill="both", expand=True)
+
 create_database()
 display_tasks()
 update_progress()

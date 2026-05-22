@@ -10,6 +10,7 @@ def create_database():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         task TEXT NOT NULL,
         subject TEXT NOT NULL,
+        deadline TEXT,
         status TEXT DEFAULT 'Pending'
     )
     """)
@@ -18,14 +19,14 @@ def create_database():
     conn.close()
 
 
-def add_task(task, subject):
+def add_task(task, subject, deadline):
     conn = sqlite3.connect("studyflow.db")
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO tasks (task, subject)
-    VALUES (?, ?)
-    """, (task, subject))
+    INSERT INTO tasks (task, subject, deadline)
+    VALUES (?, ?, ?)
+    """, (task, subject, deadline))
 
     conn.commit()
     conn.close()

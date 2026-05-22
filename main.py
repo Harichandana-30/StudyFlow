@@ -66,16 +66,45 @@ def display_tasks():
     tasks = get_tasks()
 
     for task in tasks:
-        task_text = (
-    f"ID: {task[0]}\n"
-    f"Task: {task[1]}\n"
-    f"Subject: {task[2]}\n"
-    f"Deadline: {task[3]}\n"
-    f"Status: {task[4]}\n"
-    f"{'-'*30}\n"
-)
 
-        task_list.insert("end", task_text)
+        task_list.insert("end", f"ID: {task[0]}\n")
+        task_list.insert("end", f"Task: {task[1]}\n")
+        task_list.insert("end", f"Subject: {task[2]}\n")
+        task_list.insert("end", f"Deadline: {task[3]}\n")
+
+        if task[4] == "Completed":
+            task_list.insert("end", "Status: Completed\n", "completed")
+        else:
+            task_list.insert("end", "Status: Pending\n", "pending")
+
+        task_list.insert("end", "-" * 30 + "\n")
+
+    task_list.tag_config("completed", foreground="lightgreen")
+    task_list.tag_config("pending", foreground="red")
+
+    update_progress()
+def update_progress():
+
+    tasks = get_tasks()
+
+    total_tasks = len(tasks)
+
+    completed_tasks = 0
+
+    for task in tasks:
+        if task[4] == "Completed":
+            completed_tasks += 1
+
+    if total_tasks > 0:
+        progress = completed_tasks / total_tasks
+    else:
+        progress = 0
+
+    progress_bar.set(progress)
+
+    progress_label.configure(
+        text=f"Progress: {int(progress * 100)}% Completed"
+    )
 
 # Heading
 heading = ctk.CTkLabel(
@@ -99,7 +128,7 @@ task_entry = ctk.CTkEntry(
     width=350,
     placeholder_text="Enter study task"
 )
-task_entry.pack(pady=10)
+task_entry.pack(pady=12)
 
 # Subject input
 subject_entry = ctk.CTkEntry(
@@ -107,22 +136,32 @@ subject_entry = ctk.CTkEntry(
     width=350,
     placeholder_text="Enter subject"
 )
-subject_entry.pack(pady=10)
+subject_entry.pack(pady=12)
+
+deadline_frame = ctk.CTkFrame(
+    left_frame,
+    fg_color="#2b2b2b",
+    corner_radius=12
+)
+deadline_frame.pack(pady=15)
 
 deadline_label = ctk.CTkLabel(
-    left_frame,
-    text="Select Deadline"
+    deadline_frame,
+    text="📅 Select Deadline",
+    font=("Arial", 16, "bold")
 )
-deadline_label.pack(pady=5)
+deadline_label.pack(pady=(10, 5))
 
 deadline_entry = DateEntry(
-    left_frame,
-    width=25,
-    background="darkblue",
+    deadline_frame,
+    width=22,
+    font=("Arial", 12),
+    date_pattern="dd-mm-yyyy",
+    background="#1f6aa5",
     foreground="white",
-    borderwidth=2
+    borderwidth=0
 )
-deadline_entry.pack(pady=10)
+deadline_entry.pack(pady=(0, 10), padx=15)
 
 task_id_entry = ctk.CTkEntry(
     left_frame,
@@ -154,6 +193,21 @@ delete_button = ctk.CTkButton(
 )
 delete_button.pack(pady=5)
 
+progress_label = ctk.CTkLabel(
+    right_frame,
+    text="Progress: 0% Completed",
+    font=("Arial", 18, "bold")
+)
+progress_label.pack(pady=10)
+
+progress_bar = ctk.CTkProgressBar(
+    right_frame,
+    width=400
+)
+progress_bar.pack(pady=10)
+
+progress_bar.set(0)
+
 task_label = ctk.CTkLabel(
     right_frame,
     text="Your Study Tasks",
@@ -169,5 +223,6 @@ task_list = ctk.CTkTextbox(
 task_list.pack(pady=20)
 create_database()
 display_tasks()
+update_progress()
 # Run app
 app.mainloop()

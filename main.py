@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from tkcalendar import DateEntry
+from datetime import datetime
 from database import (
     create_database,
     add_task,
@@ -145,6 +146,7 @@ def display_tasks():
 
     update_progress()
     update_dashboard()
+    check_deadlines()
 
 def update_progress():
 
@@ -195,6 +197,44 @@ def update_dashboard():
         text=f"Pending: {pending}"
     )
 
+def check_deadlines():
+
+    tasks = get_tasks()
+
+    today = datetime.today()
+
+    warning_text = ""
+
+    for task in tasks:
+
+        try:
+            deadline = datetime.strptime(
+                task[3],
+                "%d-%m-%Y"
+            )
+
+            days_left = (
+                deadline - today
+            ).days
+
+            if (
+                days_left <= 2
+                and task[4] != "Completed"
+            ):
+
+                warning_text = (
+                    f"⚠ Upcoming Deadline: "
+                    f"{task[1]}"
+                )
+
+                break
+
+        except:
+            pass
+
+    warning_label.configure(
+        text=warning_text
+    )
 # Heading
 heading = ctk.CTkLabel(
     left_frame,
@@ -317,6 +357,14 @@ progress_bar = ctk.CTkProgressBar(
 progress_bar.pack(pady=10)
 
 progress_bar.set(0)
+
+warning_label = ctk.CTkLabel(
+    right_frame,
+    text="",
+    font=("Arial", 16, "bold"),
+    text_color="orange"
+)
+warning_label.pack(pady=10)
 
 task_label = ctk.CTkLabel(
     right_frame,

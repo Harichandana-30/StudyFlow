@@ -308,7 +308,6 @@ Planned features for future versions:
 - Reminder notifications
 - Login system
 - Export reports
-- Cloud synchronization
 - AI-powered study recommendations
 
 ---

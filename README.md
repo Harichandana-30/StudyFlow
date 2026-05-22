@@ -83,7 +83,7 @@ The application automatically calculates:
 Example:
 
 ```txt
-Progress: 50% Completed
+Progress: 66% Completed
 ```
 
 This feature helps students understand how much work has been finished.

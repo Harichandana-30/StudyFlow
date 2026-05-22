@@ -1,6 +1,7 @@
 import customtkinter as ctk
 from tkcalendar import DateEntry
 from datetime import datetime
+import os
 from database import (
     create_database,
     add_task,
@@ -18,11 +19,30 @@ app = ctk.CTk()
 main_frame = ctk.CTkFrame(app)
 main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-left_frame = ctk.CTkFrame(main_frame)
-left_frame.pack(side="left", fill="both", padx=20, pady=20)
+left_frame = ctk.CTkScrollableFrame(
+    main_frame,
+    width=350
+)
 
-right_frame = ctk.CTkFrame(main_frame)
-right_frame.pack(side="right", fill="both", expand=True, padx=20, pady=20)
+left_frame.pack(
+    side="left",
+    fill="y",
+    padx=20,
+    pady=20
+)
+
+right_frame = ctk.CTkFrame(
+    main_frame,
+    corner_radius=20
+)
+
+right_frame.pack(
+    side="right",
+    fill="both",
+    expand=True,
+    padx=20,
+    pady=20
+)
 
 dashboard_frame = ctk.CTkFrame(
     right_frame,
@@ -55,7 +75,7 @@ pending_label = ctk.CTkLabel(
 pending_label.pack(side="left", padx=20)
 
 app.title("StudyFlow")
-app.geometry("1000x700")
+app.geometry("1200x760")
 
 def save_task():
     task = task_entry.get()
@@ -75,6 +95,13 @@ def mark_completed():
 
     if task_id:
         complete_task(int(task_id))
+        with open("streak.txt", "r") as file:
+            streak = int(file.read())
+
+        streak += 1
+
+        with open("streak.txt", "w") as file:
+            file.write(str(streak))
 
         task_id_entry.delete(0, "end")
 
@@ -147,6 +174,7 @@ def display_tasks():
     update_progress()
     update_dashboard()
     check_deadlines()
+    update_streak()
 
 def update_progress():
 
@@ -236,6 +264,20 @@ def check_deadlines():
         text=warning_text
     )
 
+def update_streak():
+
+    if not os.path.exists("streak.txt"):
+
+        with open("streak.txt", "w") as file:
+            file.write("0")
+
+    with open("streak.txt", "r") as file:
+        streak = file.read()
+
+    streak_label.configure(
+        text=f"🔥 Study Streak: {streak} Days"
+    )
+
 def toggle_mode():
 
     current_mode = ctk.get_appearance_mode()
@@ -262,7 +304,7 @@ heading = ctk.CTkLabel(
     text="StudyFlow",
     font=("Arial", 30, "bold")
 )
-heading.pack(pady=20)
+heading.pack(pady=(30, 15))
 
 mode_button = ctk.CTkButton(
     left_frame,
@@ -278,12 +320,14 @@ subtitle = ctk.CTkLabel(
     text="Plan Your Study Tasks",
     font=("Arial", 16)
 )
-subtitle.pack(pady=5)
+subtitle.pack(pady=(0, 20))
 
 # Task input
 task_entry = ctk.CTkEntry(
     left_frame,
     width=350,
+    height=42,
+    corner_radius=15,
     placeholder_text="Enter study task"
 )
 task_entry.pack(pady=12)
@@ -292,6 +336,8 @@ task_entry.pack(pady=12)
 subject_entry = ctk.CTkEntry(
     left_frame,
     width=350,
+    height=42,
+    corner_radius=15,
     placeholder_text="Enter subject"
 )
 subject_entry.pack(pady=12)
@@ -324,6 +370,8 @@ deadline_entry.pack(pady=(0, 10), padx=15)
 task_id_entry = ctk.CTkEntry(
     left_frame,
     width=350,
+    height=42,
+    corner_radius=15,
     placeholder_text="Enter Task ID"
 )
 task_id_entry.pack(pady=10)
@@ -331,6 +379,8 @@ task_id_entry.pack(pady=10)
 search_entry = ctk.CTkEntry(
     left_frame,
     width=350,
+    height=42,
+    corner_radius=15,
     placeholder_text="Search by Subject"
 )
 search_entry.pack(pady=10)
@@ -339,7 +389,9 @@ search_entry.pack(pady=10)
 add_button = ctk.CTkButton(
     left_frame,
     text="Add Task",
-    width=200,
+    width=220,
+    height=42,
+    corner_radius=20,
     command=save_task
 )
 add_button.pack(pady=20)
@@ -395,6 +447,14 @@ warning_label = ctk.CTkLabel(
 )
 warning_label.pack(pady=10)
 
+streak_label = ctk.CTkLabel(
+    right_frame,
+    text="🔥 Study Streak: 0 Days",
+    font=("Arial", 18, "bold"),
+    text_color="orange"
+)
+streak_label.pack(pady=10)
+
 task_label = ctk.CTkLabel(
     right_frame,
     text="Your Study Tasks",
@@ -405,9 +465,15 @@ task_label.pack(pady=(20, 10))
 task_list = ctk.CTkTextbox(
     right_frame,
     width=500,
-    height=550
+    height=550,
+    corner_radius=20
 )
-task_list.pack(pady=20, padx=20, fill="both", expand=True)
+task_list.pack(
+    pady=20,
+    padx=20,
+    fill="both",
+    expand=True
+)
 
 create_database()
 display_tasks()

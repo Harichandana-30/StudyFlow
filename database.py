@@ -1,8 +1,8 @@
 import sqlite3
 
+
 def create_database():
     conn = sqlite3.connect("studyflow.db")
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -20,7 +20,6 @@ def create_database():
 
 def add_task(task, subject):
     conn = sqlite3.connect("studyflow.db")
-
     cursor = conn.cursor()
 
     cursor.execute("""
@@ -34,7 +33,6 @@ def add_task(task, subject):
 
 def get_tasks():
     conn = sqlite3.connect("studyflow.db")
-
     cursor = conn.cursor()
 
     cursor.execute("SELECT * FROM tasks")
@@ -44,3 +42,28 @@ def get_tasks():
     conn.close()
 
     return tasks
+
+
+def complete_task(task_id):
+    conn = sqlite3.connect("studyflow.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE tasks SET status = 'Completed' WHERE id = ?",
+        (task_id,)
+    )
+
+    conn.commit()
+    conn.close()
+
+def delete_task(task_id):
+    conn = sqlite3.connect("studyflow.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "DELETE FROM tasks WHERE id = ?",
+        (task_id,)
+    )
+
+    conn.commit()
+    conn.close()

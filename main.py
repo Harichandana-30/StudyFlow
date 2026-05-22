@@ -1,5 +1,11 @@
 import customtkinter as ctk
-from database import create_database, add_task, get_tasks
+from database import (
+    create_database,
+    add_task,
+    get_tasks,
+    complete_task,
+    delete_task
+)
 # Theme settings
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -8,7 +14,7 @@ ctk.set_default_color_theme("blue")
 app = ctk.CTk()
 
 app.title("StudyFlow")
-app.geometry("700x500")
+app.geometry("800x700")
 
 def save_task():
     task = task_entry.get()
@@ -21,6 +27,26 @@ def save_task():
         subject_entry.delete(0, "end")
 
         display_tasks()
+def mark_completed():
+    task_id = task_id_entry.get()
+
+    if task_id:
+        complete_task(int(task_id))
+
+        task_id_entry.delete(0, "end")
+
+        display_tasks()
+
+
+def remove_task():
+    task_id = task_id_entry.get()
+
+    if task_id:
+        delete_task(int(task_id))
+
+        task_id_entry.delete(0, "end")
+
+        display_tasks()
 
 def display_tasks():
 
@@ -30,11 +56,12 @@ def display_tasks():
 
     for task in tasks:
         task_text = (
-            f"Task: {task[1]}\n"
-            f"Subject: {task[2]}\n"
-            f"Status: {task[3]}\n"
-            f"{'-'*30}\n"
-        )
+    f"ID: {task[0]}\n"
+    f"Task: {task[1]}\n"
+    f"Subject: {task[2]}\n"
+    f"Status: {task[3]}\n"
+    f"{'-'*30}\n"
+)
 
         task_list.insert("end", task_text)
 
@@ -69,6 +96,12 @@ subject_entry = ctk.CTkEntry(
     placeholder_text="Enter subject"
 )
 subject_entry.pack(pady=10)
+task_id_entry = ctk.CTkEntry(
+    app,
+    width=350,
+    placeholder_text="Enter Task ID"
+)
+task_id_entry.pack(pady=10)
 
 # Add task button
 add_button = ctk.CTkButton(
@@ -77,14 +110,26 @@ add_button = ctk.CTkButton(
     width=200,
     command=save_task
 )
+add_button.pack(pady=20)
+complete_button = ctk.CTkButton(
+    app,
+    text="Mark Completed",
+    command=mark_completed
+)
+complete_button.pack(pady=5)
+
+delete_button = ctk.CTkButton(
+    app,
+    text="Delete Task",
+    command=remove_task
+)
+delete_button.pack(pady=5)
 task_list = ctk.CTkTextbox(
     app,
-    width=500,
-    height=200
+    width=650,
+    height=250
 )
 task_list.pack(pady=20)
-add_button.pack(pady=20)
-
 create_database()
 display_tasks()
 # Run app

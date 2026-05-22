@@ -19,9 +19,9 @@ app = ctk.CTk()
 main_frame = ctk.CTkFrame(app)
 main_frame.pack(fill="both", expand=True, padx=20, pady=20)
 
-left_frame = ctk.CTkScrollableFrame(
+left_frame = ctk.CTkFrame(
     main_frame,
-    width=350
+    width=400
 )
 
 left_frame.pack(
@@ -75,7 +75,7 @@ pending_label = ctk.CTkLabel(
 pending_label.pack(side="left", padx=20)
 
 app.title("StudyFlow")
-app.geometry("1200x760")
+app.geometry("1500x980")
 
 def save_task():
     task = task_entry.get()
@@ -170,6 +170,9 @@ def display_tasks():
 
     task_list.tag_config("completed", foreground="lightgreen")
     task_list.tag_config("pending", foreground="red")
+    task_list.configure(
+    font=("Arial", 16)
+)
 
     update_progress()
     update_dashboard()
@@ -304,7 +307,7 @@ heading = ctk.CTkLabel(
     text="StudyFlow",
     font=("Arial", 30, "bold")
 )
-heading.pack(pady=(30, 15))
+heading.pack(pady=(20, 8))
 
 mode_button = ctk.CTkButton(
     left_frame,
@@ -320,7 +323,7 @@ subtitle = ctk.CTkLabel(
     text="Plan Your Study Tasks",
     font=("Arial", 16)
 )
-subtitle.pack(pady=(0, 20))
+subtitle.pack(pady=(0, 10))
 
 # Task input
 task_entry = ctk.CTkEntry(
@@ -330,7 +333,7 @@ task_entry = ctk.CTkEntry(
     corner_radius=15,
     placeholder_text="Enter study task"
 )
-task_entry.pack(pady=12)
+task_entry.pack(pady=6)
 
 # Subject input
 subject_entry = ctk.CTkEntry(
@@ -340,7 +343,7 @@ subject_entry = ctk.CTkEntry(
     corner_radius=15,
     placeholder_text="Enter subject"
 )
-subject_entry.pack(pady=12)
+subject_entry.pack(pady=6)
 
 deadline_frame = ctk.CTkFrame(
     left_frame,
@@ -365,7 +368,7 @@ deadline_entry = DateEntry(
     foreground="white",
     borderwidth=0
 )
-deadline_entry.pack(pady=(0, 10), padx=15)
+deadline_entry.pack(pady=(0, 10), padx=8)
 
 task_id_entry = ctk.CTkEntry(
     left_frame,
@@ -394,35 +397,35 @@ add_button = ctk.CTkButton(
     corner_radius=20,
     command=save_task
 )
-add_button.pack(pady=20)
+add_button.pack(pady=4)
 
 complete_button = ctk.CTkButton(
     left_frame,
     text="Mark Completed",
     command=mark_completed
 )
-complete_button.pack(pady=5)
+complete_button.pack(pady=4)
 
 delete_button = ctk.CTkButton(
     left_frame,
     text="Delete Task",
     command=remove_task
 )
-delete_button.pack(pady=5)
+delete_button.pack(pady=4)
 
 search_button = ctk.CTkButton(
     left_frame,
     text="Search Subject",
     command=search_subject
 )
-search_button.pack(pady=5)
+search_button.pack(pady=4)
 
 reset_button = ctk.CTkButton(
     left_frame,
     text="Show All Tasks",
     command=display_tasks
 )
-reset_button.pack(pady=5)
+reset_button.pack(pady=4)
 
 progress_label = ctk.CTkLabel(
     right_frame,
@@ -464,8 +467,8 @@ task_label.pack(pady=(20, 10))
 
 task_list = ctk.CTkTextbox(
     right_frame,
-    width=500,
-    height=550,
+    width=850,
+    height=300,
     corner_radius=20
 )
 task_list.pack(

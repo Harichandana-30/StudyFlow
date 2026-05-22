@@ -103,9 +103,9 @@ The dashboard displays:
 Example:
 
 ```txt
-Total: 4
+Total: 3
 Completed: 2
-Pending: 2
+Pending: 1
 ```
 
 This provides a quick overview of academic progress.

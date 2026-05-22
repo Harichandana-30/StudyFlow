@@ -235,6 +235,27 @@ def check_deadlines():
     warning_label.configure(
         text=warning_text
     )
+
+def toggle_mode():
+
+    current_mode = ctk.get_appearance_mode()
+
+    if current_mode == "Dark":
+
+        ctk.set_appearance_mode("light")
+
+        mode_button.configure(
+            text="🌙 Dark Mode"
+        )
+
+    else:
+
+        ctk.set_appearance_mode("dark")
+
+        mode_button.configure(
+            text="☀ Light Mode"
+        )
+
 # Heading
 heading = ctk.CTkLabel(
     left_frame,
@@ -242,6 +263,14 @@ heading = ctk.CTkLabel(
     font=("Arial", 30, "bold")
 )
 heading.pack(pady=20)
+
+mode_button = ctk.CTkButton(
+    left_frame,
+    text="☀ Light Mode",
+    command=toggle_mode,
+    width=180
+)
+mode_button.pack(pady=10)
 
 # Subtitle
 subtitle = ctk.CTkLabel(

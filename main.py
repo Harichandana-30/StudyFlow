@@ -5,7 +5,8 @@ from database import (
     add_task,
     get_tasks,
     complete_task,
-    delete_task
+    delete_task,
+    search_tasks
 )
 # Theme settings
 ctk.set_appearance_mode("dark")
@@ -58,6 +59,36 @@ def remove_task():
         task_id_entry.delete(0, "end")
 
         display_tasks()
+
+def search_subject():
+
+    subject = search_entry.get()
+
+    task_list.delete("0.0", "end")
+
+    tasks = search_tasks(subject)
+
+    for task in tasks:
+
+        task_list.insert("end", f"ID: {task[0]}\n")
+        task_list.insert("end", f"Task: {task[1]}\n")
+        task_list.insert("end", f"Subject: {task[2]}\n")
+        task_list.insert("end", f"Deadline: {task[3]}\n")
+
+        if task[4] == "Completed":
+            task_list.insert(
+                "end",
+                "Status: Completed\n",
+                "completed"
+            )
+        else:
+            task_list.insert(
+                "end",
+                "Status: Pending\n",
+                "pending"
+            )
+
+        task_list.insert("end", "-" * 30 + "\n")
 
 def display_tasks():
 
@@ -170,6 +201,13 @@ task_id_entry = ctk.CTkEntry(
 )
 task_id_entry.pack(pady=10)
 
+search_entry = ctk.CTkEntry(
+    left_frame,
+    width=350,
+    placeholder_text="Search by Subject"
+)
+search_entry.pack(pady=10)
+
 # Add task button
 add_button = ctk.CTkButton(
     left_frame,
@@ -192,6 +230,20 @@ delete_button = ctk.CTkButton(
     command=remove_task
 )
 delete_button.pack(pady=5)
+
+search_button = ctk.CTkButton(
+    left_frame,
+    text="Search Subject",
+    command=search_subject
+)
+search_button.pack(pady=5)
+
+reset_button = ctk.CTkButton(
+    left_frame,
+    text="Show All Tasks",
+    command=display_tasks
+)
+reset_button.pack(pady=5)
 
 progress_label = ctk.CTkLabel(
     right_frame,

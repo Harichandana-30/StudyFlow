@@ -68,3 +68,18 @@ def delete_task(task_id):
 
     conn.commit()
     conn.close()
+
+def search_tasks(subject):
+    conn = sqlite3.connect("studyflow.db")
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "SELECT * FROM tasks WHERE subject LIKE ?",
+        ('%' + subject + '%',)
+    )
+
+    tasks = cursor.fetchall()
+
+    conn.close()
+
+    return tasks
